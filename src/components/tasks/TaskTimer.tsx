@@ -13,11 +13,13 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PlayIcon, PauseIcon, StopIcon } from "lucide-react";
+import { PlayIcon, PauseIcon, SquareIcon } from "lucide-react";
 
 const TaskTimer: React.FC = () => {
   const { tasks } = useTask();
@@ -161,7 +163,7 @@ const TaskTimer: React.FC = () => {
               disabled={!isRunning && !isPaused}
               onClick={stopTimer}
             >
-              <StopIcon className="mr-2 h-4 w-4" /> Arrêter
+              <SquareIcon className="mr-2 h-4 w-4" /> Arrêter
             </Button>
           </div>
         </div>

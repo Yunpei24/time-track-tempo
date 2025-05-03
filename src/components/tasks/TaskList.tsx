@@ -26,6 +26,9 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+// Type definition for task status
+type TaskStatus = "todo" | "in-progress" | "completed";
+
 interface TaskListProps {
   onEditTask: (task: Task) => void;
 }

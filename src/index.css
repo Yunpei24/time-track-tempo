@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
@@ -12,78 +13,60 @@
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
+ 
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 221 83% 53%;
+ 
+    --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
-
+ 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
+ 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
+ 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
+ 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
-
+    --ring: 222.2 84% 4.9%;
+ 
     --radius: 0.5rem;
-
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 214 32% 91%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 32% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 25% 27%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-
+ 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
+ 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
+ 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 217.2 91.2% 59.8%;
+ 
+    --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
+ 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
+ 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
+ 
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
+ 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
+ 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-    
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 214 32% 91%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 32% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 25% 27%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 212.7 26.8% 83.9%;
   }
 }
 
@@ -91,83 +74,40 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
+    @apply bg-background text-foreground;
   }
 }
 
-/* Timer styles */
+/* Custom animations and styles */
+.animate-timer-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 .timer-circle {
   stroke-dasharray: 283;
-  stroke-dashoffset: 0;
-  transform-origin: center;
-  transform: rotate(-90deg);
   transition: stroke-dashoffset 1s linear;
 }
 
-.sidebar {
-  transition: width 0.3s ease;
+/* Project card with custom color variable */
+.project-card {
+  border-left: 4px solid var(--project-color, #3b82f6);
 }
 
-.sidebar.collapsed {
-  width: 5rem;
-}
-
-.sidebar.collapsed .nav-text {
-  display: none;
+/* Task actions opacity transition */
+.task-actions {
+  transition: opacity 0.2s ease;
 }
 
 .task-item:hover .task-actions {
-  opacity: 1;
-}
-
-/* Priority colors */
-.priority-high {
-  @apply border-l-4 border-red-500;
-}
-
-.priority-medium {
-  @apply border-l-4 border-yellow-500;
-}
-
-.priority-low {
-  @apply border-l-4 border-green-500;
-}
-
-/* Status badges */
-.status-todo {
-  @apply bg-gray-100 text-gray-800;
-}
-
-.status-in-progress {
-  @apply bg-blue-100 text-blue-800;
-}
-
-.status-completed {
-  @apply bg-green-100 text-green-800;
-}
-
-/* Project cards */
-.project-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, var(--project-color, theme('colors.blue.500')), transparent);
-  opacity: 0.1;
-  z-index: 0;
-}
-
-.project-card > * {
-  position: relative;
-  z-index: 1;
+  opacity: 1 !important;
 }

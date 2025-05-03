@@ -125,7 +125,6 @@ const TaskStats: React.FC<TaskStatisticsProps> = ({ userId }) => {
                     value={totalTimeSpent > 0 ? (project.timeSpent / totalTimeSpent) * 100 : 0} 
                     className="h-2"
                     style={{ backgroundColor: project.color + "33" }}
-                    indicatorStyle={{ backgroundColor: project.color }}
                   />
                 </div>
               ))
