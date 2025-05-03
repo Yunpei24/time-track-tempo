@@ -10,6 +10,9 @@ import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Projects from "./pages/Projects";
 import Reports from "./pages/Reports";
+import Calendar from "./pages/Calendar";
+import TimeTracking from "./pages/TimeTracking";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { TaskProvider } from "./contexts/TaskContext";
@@ -68,6 +71,30 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Reports />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/calendar" 
+      element={
+        <ProtectedRoute>
+          <Calendar />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/time-tracking" 
+      element={
+        <ProtectedRoute>
+          <TimeTracking />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/settings" 
+      element={
+        <ProtectedRoute>
+          <Settings />
         </ProtectedRoute>
       } 
     />
