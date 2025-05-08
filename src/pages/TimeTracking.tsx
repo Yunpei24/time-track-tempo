@@ -15,14 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ClockIcon, PlayIcon, PauseIcon, StopIcon } from "lucide-react";
+import { ClockIcon, PlayIcon, PauseIcon, StopCircleIcon } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 const TimeTracking: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tasks, addTimeToTask } = useTask();
-  const { isTimerRunning, startTimer, pauseTimer, stopTimer, elapsedTime } = useTimer();
+  const { isRunning, isPaused, seconds, startTimer, pauseTimer, stopTimer } = useTimer();
   
   const [selectedTaskId, setSelectedTaskId] = useState<string>("");
   
@@ -50,7 +50,7 @@ const TimeTracking: React.FC = () => {
       return;
     }
     
-    startTimer();
+    startTimer(selectedTaskId);
     toast.success("Chronomètre démarré");
   };
 
@@ -66,7 +66,7 @@ const TimeTracking: React.FC = () => {
     }
     
     // Convert elapsed time from seconds to minutes for storage
-    const elapsedMinutes = Math.floor(elapsedTime / 60);
+    const elapsedMinutes = Math.floor(seconds / 60);
     addTimeToTask(selectedTaskId, elapsedMinutes);
     stopTimer();
     
@@ -113,11 +113,11 @@ const TimeTracking: React.FC = () => {
                   
                   <div className="flex flex-col items-center space-y-6">
                     <div className="text-6xl font-mono font-semibold py-6 animate-timer-pulse">
-                      {formatTime(elapsedTime)}
+                      {formatTime(seconds)}
                     </div>
                     
                     <div className="flex space-x-4">
-                      {!isTimerRunning ? (
+                      {!isRunning ? (
                         <Button 
                           className="bg-green-500 hover:bg-green-600"
                           onClick={handleStartTimer}
@@ -137,9 +137,9 @@ const TimeTracking: React.FC = () => {
                       <Button 
                         variant="destructive"
                         onClick={handleStopTimer}
-                        disabled={!isTimerRunning && elapsedTime === 0}
+                        disabled={!isRunning && !isPaused && seconds === 0}
                       >
-                        <StopIcon className="h-5 w-5 mr-2" />
+                        <StopCircleIcon className="h-5 w-5 mr-2" />
                         Arrêter
                       </Button>
                     </div>
