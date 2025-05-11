@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/sonner";
-import { SettingsIcon, UserIcon, BellIcon, MoonIcon, SunIcon, DesktopIcon } from "lucide-react";
+import { SettingsIcon, UserIcon, BellIcon, MoonIcon, SunIcon, Monitor } from "lucide-react";
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -257,7 +257,7 @@ const Settings: React.FC = () => {
                         onClick={() => handleThemeChange('system')}
                       >
                         <div className="flex justify-center items-center h-20 bg-gradient-to-r from-white to-gray-800 border rounded-md mb-2">
-                          <DesktopIcon className="h-8 w-8 text-purple-500" />
+                          <Monitor className="h-8 w-8 text-purple-500" />
                         </div>
                         <p className="font-medium text-center">Système</p>
                       </div>
