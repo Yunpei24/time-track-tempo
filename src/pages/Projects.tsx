@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Project } from "@/contexts/TaskContext";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Projects: React.FC = () => {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ const Projects: React.FC = () => {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<Project | undefined>(undefined);
+  const isMobile = useIsMobile();
 
   if (!user) {
     navigate("/");
@@ -49,22 +51,22 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 flex-col sm:flex-row">
       <Sidebar onNewTask={openNewTaskModal} />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title="Projets" />
         
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-800">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                 Tous les projets
               </h1>
               {isManager && (
-                <Button onClick={openNewProjectModal}>
-                  <PlusIcon className="h-4 w-4 mr-2" />
-                  Nouveau projet
+                <Button onClick={openNewProjectModal} size={isMobile ? "sm" : "default"}>
+                  <PlusIcon className="h-4 w-4 mr-1 sm:mr-2" />
+                  {isMobile ? "Nouveau" : "Nouveau projet"}
                 </Button>
               )}
             </div>

@@ -17,12 +17,14 @@ import {
 } from "@/components/ui/select";
 import { ClockIcon, PlayIcon, PauseIcon, StopCircleIcon } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TimeTracking: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tasks, addTimeToTask } = useTask();
   const { isRunning, isPaused, seconds, startTimer, pauseTimer, stopTimer } = useTimer();
+  const isMobile = useIsMobile();
   
   const [selectedTaskId, setSelectedTaskId] = useState<string>("");
   
@@ -74,31 +76,31 @@ const TimeTracking: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 flex-col sm:flex-row">
       <Sidebar onNewTask={() => {}} />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title="Chrono" />
         
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
               Suivi du temps
             </h1>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <Card className="shadow-soft">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="flex items-center text-lg sm:text-xl">
                     <ClockIcon className="h-5 w-5 mr-2" />
                     Chronomètre
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
+                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+                  <div className="space-y-3 sm:space-y-4">
                     <label className="text-sm font-medium">Sélectionnez une tâche</label>
                     <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Sélectionner une tâche" />
                       </SelectTrigger>
                       <SelectContent>
@@ -111,26 +113,27 @@ const TimeTracking: React.FC = () => {
                     </Select>
                   </div>
                   
-                  <div className="flex flex-col items-center space-y-6">
-                    <div className="text-6xl font-mono font-semibold py-6 animate-timer-pulse">
+                  <div className="flex flex-col items-center space-y-4 sm:space-y-6">
+                    <div className="text-4xl sm:text-6xl font-mono font-semibold py-4 sm:py-6 animate-timer-pulse">
                       {formatTime(seconds)}
                     </div>
                     
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-2 sm:space-x-4 w-full justify-center">
                       {!isRunning ? (
                         <Button 
-                          className="bg-green-500 hover:bg-green-600"
+                          className="bg-green-500 hover:bg-green-600 flex-1 sm:flex-none"
                           onClick={handleStartTimer}
                         >
-                          <PlayIcon className="h-5 w-5 mr-2" />
+                          <PlayIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                           Démarrer
                         </Button>
                       ) : (
                         <Button 
                           onClick={handlePauseTimer}
                           variant="outline"
+                          className="flex-1 sm:flex-none"
                         >
-                          <PauseIcon className="h-5 w-5 mr-2" />
+                          <PauseIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                           Pause
                         </Button>
                       )}
@@ -138,8 +141,9 @@ const TimeTracking: React.FC = () => {
                         variant="destructive"
                         onClick={handleStopTimer}
                         disabled={!isRunning && !isPaused && seconds === 0}
+                        className="flex-1 sm:flex-none"
                       >
-                        <StopCircleIcon className="h-5 w-5 mr-2" />
+                        <StopCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                         Arrêter
                       </Button>
                     </div>
@@ -148,22 +152,22 @@ const TimeTracking: React.FC = () => {
               </Card>
               
               <Card className="shadow-soft">
-                <CardHeader>
-                  <CardTitle>Temps récent</CardTitle>
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="text-lg sm:text-xl">Temps récent</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 sm:p-6">
                   {userTasks.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4 max-h-[50vh] overflow-y-auto">
                       {userTasks.slice(0, 5).map((task) => (
-                        <div key={task.id} className="flex justify-between items-center p-3 border-b">
-                          <div>
+                        <div key={task.id} className="flex flex-col sm:flex-row justify-between sm:items-center p-2 sm:p-3 border-b text-sm sm:text-base">
+                          <div className="mb-2 sm:mb-0">
                             <p className="font-medium">{task.title}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs sm:text-sm text-muted-foreground">
                               {task.timeSpent} minutes enregistrées
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium">Estimé: {task.timeEstimate} min</p>
+                          <div className="text-left sm:text-right">
+                            <p className="text-xs sm:text-sm font-medium">Estimé: {task.timeEstimate} min</p>
                             <p className="text-xs text-muted-foreground">
                               {Math.round((task.timeSpent / task.timeEstimate) * 100)}% complété
                             </p>
@@ -172,7 +176,7 @@ const TimeTracking: React.FC = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="text-center py-6 sm:py-8 text-muted-foreground">
                       Aucune tâche assignée
                     </div>
                   )}
