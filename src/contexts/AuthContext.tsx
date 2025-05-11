@@ -10,6 +10,7 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  workspaceName?: string; // Add workspace name to user type
 }
 
 interface AuthContextProps {
@@ -17,7 +18,7 @@ interface AuthContextProps {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, workspaceName?: string) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
 }
@@ -30,6 +31,7 @@ const mockUsers = [
     email: "jean@example.com",
     password: "password123",
     role: "manager" as UserRole,
+    workspaceName: "Entreprise Jean",
   },
   {
     id: "2",
@@ -37,6 +39,7 @@ const mockUsers = [
     email: "marie@example.com",
     password: "password123",
     role: "member" as UserRole,
+    workspaceName: "Entreprise Jean",
   }
 ];
 
@@ -81,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success(`Bienvenue, ${userWithoutPassword.name}!`);
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, workspaceName?: string) => {
     setIsLoading(true);
     
     // Simulate API request delay
@@ -99,7 +102,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       id: `${mockUsers.length + 1}`,
       name,
       email,
-      role: "member" as UserRole,
+      role: "manager" as UserRole, // New users become managers of their own workspace
+      workspaceName: workspaceName || "Mon espace",
     };
     
     // Store user in localStorage
