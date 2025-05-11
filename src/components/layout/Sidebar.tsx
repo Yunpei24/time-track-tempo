@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,6 +14,7 @@ import {
   Plus,
   MenuIcon,
   X,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -39,6 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
     { path: "/calendar", label: "Calendrier", icon: CalendarIcon },
     { path: "/tasks", label: "Tâches", icon: CheckSquareIcon },
     { path: "/projects", label: "Projets", icon: ListChecks },
+    { path: "/members", label: "Membres", icon: Users },
     { path: "/reports", label: "Rapports", icon: BarChart },
     { path: "/time-tracking", label: "Chrono", icon: ClockIcon },
     { path: "/settings", label: "Paramètres", icon: Settings },
@@ -46,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
 
   return (
     <aside
-      className={`sidebar fixed top-0 left-0 h-full w-64 bg-sidebar-background border-r border-sidebar-border transition-transform transform ${
+      className={`sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 transition-transform transform ${
         isMobile
           ? isExpanded
             ? "translate-x-0 z-50"
@@ -56,13 +59,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
     >
       <div className="flex flex-col h-full">
         <div className="p-4 flex items-center justify-between">
-          <span className="font-bold text-lg text-sidebar-foreground">
+          <span className="font-bold text-lg text-blue-600">
             TimeTrek
           </span>
           {isMobile && (
             <button
               onClick={toggleSidebar}
-              className="sidebar-toggle text-sidebar-foreground focus:outline-none"
+              className="sidebar-toggle text-gray-600 focus:outline-none"
             >
               {isExpanded ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
             </button>
@@ -76,10 +79,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center p-2 rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                    `flex items-center p-2 rounded-md transition-colors hover:bg-gray-100 ${
                       isActive
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                        : "text-sidebar-foreground"
+                        ? "bg-blue-50 text-blue-600 font-medium"
+                        : "text-gray-700"
                     }`
                   }
                   onClick={closeSidebar}

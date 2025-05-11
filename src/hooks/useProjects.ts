@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Project } from "@/types/taskTypes";
 import { mockProjects } from "@/data/mockData";
@@ -14,9 +13,9 @@ export const useProjects = () => {
     if (storedProjects) {
       setProjects(JSON.parse(storedProjects));
     } else {
-      // Initial load of mock data
-      localStorage.setItem("projects", JSON.stringify(mockProjects));
-      setProjects(mockProjects);
+      // Initialize with empty projects array
+      localStorage.setItem("projects", JSON.stringify([]));
+      setProjects([]);
     }
   }, []);
 

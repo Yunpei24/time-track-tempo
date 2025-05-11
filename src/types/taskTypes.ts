@@ -3,6 +3,16 @@
 export type TaskPriority = "low" | "medium" | "high";
 export type TaskStatus = "todo" | "in-progress" | "completed";
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "member" | "manager";
+  workspaceId: string;
+  avatarUrl?: string;
+  createdAt: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -27,6 +37,15 @@ export interface Project {
   endDate: string;
   createdBy: string;
   members: string[];
+}
+
+export interface WorkspaceMember {
+  id: string;
+  name: string;
+  email: string;
+  role: "member" | "manager";
+  joinedAt: string;
+  avatarUrl?: string;
 }
 
 export interface TaskContextProps {

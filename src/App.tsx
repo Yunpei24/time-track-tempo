@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Projects from "./pages/Projects";
+import Members from "./pages/Members";
 import Reports from "./pages/Reports";
 import Calendar from "./pages/Calendar";
 import TimeTracking from "./pages/TimeTracking";
@@ -63,6 +64,14 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <Projects />
+        </ProtectedRoute>
+      } 
+    />
+    <Route 
+      path="/members" 
+      element={
+        <ProtectedRoute>
+          <Members />
         </ProtectedRoute>
       } 
     />
