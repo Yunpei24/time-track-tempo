@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
 
   return (
     <aside
-      className={`sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 transition-transform transform ${
+      className={`sidebar fixed top-0 left-0 h-full w-64 bg-sidebar shadow-md transition-transform transform ${
         isMobile
           ? isExpanded
             ? "translate-x-0 z-50"
@@ -58,14 +58,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
       } sm:translate-x-0`}
     >
       <div className="flex flex-col h-full">
-        <div className="p-4 flex items-center justify-between">
-          <span className="font-bold text-lg text-blue-600">
+        <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
+          <span className="font-bold text-lg text-sidebar-primary">
             TimeTrek
           </span>
           {isMobile && (
             <button
               onClick={toggleSidebar}
-              className="sidebar-toggle text-gray-600 focus:outline-none"
+              className="sidebar-toggle text-sidebar-foreground focus:outline-none"
             >
               {isExpanded ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
             </button>
@@ -79,10 +79,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center p-2 rounded-md transition-colors hover:bg-gray-100 ${
+                    `flex items-center p-2 rounded-md transition-colors hover:bg-sidebar-accent ${
                       isActive
-                        ? "bg-blue-50 text-blue-600 font-medium"
-                        : "text-gray-700"
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                        : "text-sidebar-foreground"
                     }`
                   }
                   onClick={closeSidebar}
@@ -95,10 +95,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
           </ul>
         </nav>
 
-        <div className="p-4">
+        <div className="p-4 border-t border-sidebar-border">
           <Button
             variant="secondary"
-            className="w-full justify-start mb-2"
+            className="w-full justify-start mb-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/90"
             onClick={onNewTask}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewTask }) => {
           </Button>
           <Button
             variant="outline"
-            className="w-full justify-start"
+            className="w-full justify-start border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             onClick={logout}
           >
             Déconnexion

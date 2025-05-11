@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/sonner";
-import { SettingsIcon, UserIcon, BellIcon } from "lucide-react";
+import { SettingsIcon, UserIcon, BellIcon, MoonIcon, SunIcon, DesktopIcon } from "lucide-react";
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -26,8 +26,13 @@ const Settings: React.FC = () => {
       taskReminders: true,
       weeklyReport: true,
     },
-    theme: "light"
+    theme: localStorage.getItem("theme") || "system"
   });
+
+  useEffect(() => {
+    // Au chargement initial, appliquer le thème stocké
+    applyTheme(userSettings.theme);
+  }, []);
 
   if (!user) {
     navigate("/");
@@ -57,6 +62,21 @@ const Settings: React.FC = () => {
       ...userSettings,
       theme
     });
+    applyTheme(theme);
+    localStorage.setItem("theme", theme);
+  };
+
+  const applyTheme = (theme: string) => {
+    const root = window.document.documentElement;
+    
+    root.classList.remove("dark", "light");
+    
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
+    }
   };
 
   const handleSaveProfile = () => {
@@ -64,7 +84,7 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background">
       <Sidebar onNewTask={() => {}} />
       
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -72,7 +92,7 @@ const Settings: React.FC = () => {
         
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <h1 className="text-2xl font-bold text-foreground mb-6 flex items-center">
               <SettingsIcon className="h-6 w-6 mr-2" />
               Paramètres
             </h1>
@@ -208,7 +228,9 @@ const Settings: React.FC = () => {
                         }`}
                         onClick={() => handleThemeChange('light')}
                       >
-                        <div className="h-20 bg-white border rounded-md mb-2"></div>
+                        <div className="flex justify-center items-center h-20 bg-white border rounded-md mb-2">
+                          <SunIcon className="h-8 w-8 text-amber-500" />
+                        </div>
                         <p className="font-medium text-center">Clair</p>
                       </div>
                       
@@ -220,7 +242,9 @@ const Settings: React.FC = () => {
                         }`}
                         onClick={() => handleThemeChange('dark')}
                       >
-                        <div className="h-20 bg-gray-800 border rounded-md mb-2"></div>
+                        <div className="flex justify-center items-center h-20 bg-gray-800 border rounded-md mb-2">
+                          <MoonIcon className="h-8 w-8 text-blue-400" />
+                        </div>
                         <p className="font-medium text-center">Sombre</p>
                       </div>
                       
@@ -232,7 +256,9 @@ const Settings: React.FC = () => {
                         }`}
                         onClick={() => handleThemeChange('system')}
                       >
-                        <div className="h-20 bg-gradient-to-r from-white to-gray-800 border rounded-md mb-2"></div>
+                        <div className="flex justify-center items-center h-20 bg-gradient-to-r from-white to-gray-800 border rounded-md mb-2">
+                          <DesktopIcon className="h-8 w-8 text-purple-500" />
+                        </div>
                         <p className="font-medium text-center">Système</p>
                       </div>
                     </div>
