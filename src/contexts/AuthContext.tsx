@@ -1,6 +1,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 // Types
 export type UserRole = "member" | "manager";
@@ -23,26 +24,6 @@ interface AuthContextProps {
   forgotPassword: (email: string) => Promise<void>;
 }
 
-// Mock user data
-const mockUsers = [
-  {
-    id: "1",
-    name: "Jean Dupont",
-    email: "jean@example.com",
-    password: "password123",
-    role: "manager" as UserRole,
-    workspaceName: "Entreprise Jean",
-  },
-  {
-    id: "2",
-    name: "Marie Martin",
-    email: "marie@example.com",
-    password: "password123",
-    role: "member" as UserRole,
-    workspaceName: "Entreprise Jean",
-  }
-];
-
 // Create context
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
@@ -50,91 +31,160 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Check for active session
   useEffect(() => {
-    // Check if user is stored in localStorage (simulating persistence)
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    const checkSession = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Check if there's an active session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
+        if (session) {
+          // Get user profile data
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (profileError) throw profileError;
+          
+          // Set user data
+          setUser({
+            id: profile.id,
+            name: profile.name,
+            email: profile.email,
+            role: profile.role as UserRole,
+            workspaceName: profile.workspaceid
+          });
+        }
+      } catch (error) {
+        console.error('Error checking session:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
+    
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+          // Get user profile data
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (!profileError && profile) {
+            setUser({
+              id: profile.id,
+              name: profile.name,
+              email: profile.email,
+              role: profile.role as UserRole,
+              workspaceName: profile.workspaceid
+            });
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+      }
+    );
+    
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     
-    // Simulate API request delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Find user with matching email
-    const foundUser = mockUsers.find(u => u.email === email);
-    
-    if (!foundUser || foundUser.password !== password) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) throw error;
+      
+      // User profile data is fetched in the auth state change listener
+      toast.success(`Bienvenue !`);
+    } catch (error: any) {
+      console.error('Error logging in:', error);
+      toast.error(error.message || "Erreur lors de la connexion");
+      throw error;
+    } finally {
       setIsLoading(false);
-      throw new Error("Email ou mot de passe invalide");
     }
-    
-    // Create user object without password
-    const { password: _, ...userWithoutPassword } = foundUser;
-    
-    // Store user in localStorage
-    localStorage.setItem("user", JSON.stringify(userWithoutPassword));
-    
-    setUser(userWithoutPassword);
-    setIsLoading(false);
-    toast.success(`Bienvenue, ${userWithoutPassword.name}!`);
   };
 
   const register = async (name: string, email: string, password: string, workspaceName?: string) => {
     setIsLoading(true);
     
-    // Simulate API request delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if email already exists
-    const userExists = mockUsers.some(u => u.email === email);
-    if (userExists) {
+    try {
+      // Register the user
+      const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            name,
+            role: "manager", // New users are managers of their workspace
+            workspaceId: workspaceName || "Mon espace"
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast.success("Compte créé avec succès!");
+    } catch (error: any) {
+      console.error('Error registering:', error);
+      toast.error(error.message || "Erreur lors de la création du compte");
+      throw error;
+    } finally {
       setIsLoading(false);
-      throw new Error("Cet email est déjà enregistré");
     }
-    
-    // Create new user
-    const newUser = {
-      id: `${mockUsers.length + 1}`,
-      name,
-      email,
-      role: "manager" as UserRole, // New users become managers of their own workspace
-      workspaceName: workspaceName || "Mon espace",
-    };
-    
-    // Store user in localStorage
-    localStorage.setItem("user", JSON.stringify(newUser));
-    
-    setUser(newUser);
-    setIsLoading(false);
-    toast.success("Compte créé avec succès!");
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    toast.success("Vous avez été déconnecté");
+  const logout = async () => {
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) throw error;
+      
+      setUser(null);
+      toast.success("Vous avez été déconnecté");
+    } catch (error) {
+      console.error('Error logging out:', error);
+      toast.error("Erreur lors de la déconnexion");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const forgotPassword = async (email: string) => {
     setIsLoading(true);
     
-    // Simulate API request delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const userExists = mockUsers.some(u => u.email === email);
-    
-    if (!userExists) {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) throw error;
+      
+      toast.success("Si un compte existe avec cet email, vous recevrez un lien pour réinitialiser votre mot de passe.");
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      // Still show success message to prevent email enumeration
+      toast.success("Si un compte existe avec cet email, vous recevrez un lien pour réinitialiser votre mot de passe.");
+    } finally {
       setIsLoading(false);
-      throw new Error("Aucun compte trouvé avec cet email");
     }
-    
-    setIsLoading(false);
-    toast.success("Si un compte existe avec cet email, vous recevrez un lien pour réinitialiser votre mot de passe.");
   };
 
   return (

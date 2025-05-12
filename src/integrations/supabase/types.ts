@@ -9,7 +9,137 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatarurl: string | null
+          createdat: string
+          email: string
+          id: string
+          name: string
+          role: string
+          workspaceid: string
+        }
+        Insert: {
+          avatarurl?: string | null
+          createdat?: string
+          email: string
+          id: string
+          name: string
+          role?: string
+          workspaceid: string
+        }
+        Update: {
+          avatarurl?: string | null
+          createdat?: string
+          email?: string
+          id?: string
+          name?: string
+          role?: string
+          workspaceid?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          color: string
+          createdby: string
+          description: string | null
+          enddate: string
+          id: string
+          members: string[]
+          name: string
+          startdate: string
+        }
+        Insert: {
+          color: string
+          createdby: string
+          description?: string | null
+          enddate: string
+          id?: string
+          members?: string[]
+          name: string
+          startdate: string
+        }
+        Update: {
+          color?: string
+          createdby?: string
+          description?: string | null
+          enddate?: string
+          id?: string
+          members?: string[]
+          name?: string
+          startdate?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_createdby_fkey"
+            columns: ["createdby"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assignedto: string[]
+          createdat: string
+          description: string | null
+          duedate: string | null
+          id: string
+          priority: string
+          projectid: string | null
+          status: string
+          timeestimate: number
+          timespent: number
+          title: string
+          userid: string
+        }
+        Insert: {
+          assignedto?: string[]
+          createdat?: string
+          description?: string | null
+          duedate?: string | null
+          id?: string
+          priority: string
+          projectid?: string | null
+          status?: string
+          timeestimate?: number
+          timespent?: number
+          title: string
+          userid: string
+        }
+        Update: {
+          assignedto?: string[]
+          createdat?: string
+          description?: string | null
+          duedate?: string | null
+          id?: string
+          priority?: string
+          projectid?: string | null
+          status?: string
+          timeestimate?: number
+          timespent?: number
+          title?: string
+          userid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_projectid_fkey"
+            columns: ["projectid"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_userid_fkey"
+            columns: ["userid"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
