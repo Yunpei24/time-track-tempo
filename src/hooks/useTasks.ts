@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Task } from "@/types/taskTypes";
+import { Task, TaskPriority, TaskStatus } from "@/types/taskTypes";
 import { toast } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,6 +9,22 @@ export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user } = useAuth();
+
+  // Helper function to ensure priority value is a valid TaskPriority
+  const validatePriority = (priority: string): TaskPriority => {
+    if (priority === "low" || priority === "medium" || priority === "high") {
+      return priority as TaskPriority;
+    }
+    return "medium"; // Default fallback
+  };
+
+  // Helper function to ensure status value is a valid TaskStatus
+  const validateStatus = (status: string): TaskStatus => {
+    if (status === "todo" || status === "in-progress" || status === "completed") {
+      return status as TaskStatus;
+    }
+    return "todo"; // Default fallback
+  };
 
   // Fetch tasks from Supabase
   useEffect(() => {
@@ -33,8 +49,8 @@ export const useTasks = () => {
           projectId: task.projectid || "",
           userId: task.userid,
           assignedTo: task.assignedto || [],
-          priority: task.priority,
-          status: task.status,
+          priority: validatePriority(task.priority),
+          status: validateStatus(task.status),
           dueDate: task.duedate || new Date().toISOString().split('T')[0],
           timeEstimate: task.timeestimate || 0,
           timeSpent: task.timespent || 0,
@@ -87,8 +103,8 @@ export const useTasks = () => {
           projectId: data[0].projectid || "",
           userId: data[0].userid,
           assignedTo: data[0].assignedto || [],
-          priority: data[0].priority,
-          status: data[0].status,
+          priority: validatePriority(data[0].priority),
+          status: validateStatus(data[0].status),
           dueDate: data[0].duedate || new Date().toISOString().split('T')[0],
           timeEstimate: data[0].timeestimate || 0,
           timeSpent: data[0].timespent || 0,
