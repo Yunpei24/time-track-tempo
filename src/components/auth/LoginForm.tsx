@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/components/ui/sonner";
 
 interface LoginFormProps {
   onShowRegister: () => void;
@@ -23,10 +24,18 @@ const LoginForm: React.FC<LoginFormProps> = ({
     e.preventDefault();
     setError("");
 
+    if (!email.trim() || !password.trim()) {
+      setError("Veuillez remplir tous les champs");
+      return;
+    }
+
     try {
       await login(email, password);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      toast.success("Connexion réussie");
+    } catch (err: any) {
+      console.error("Erreur de connexion:", err);
+      setError(err instanceof Error ? err.message : "Une erreur est survenue lors de la connexion");
+      toast.error("Échec de la connexion");
     }
   };
 
