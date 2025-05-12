@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkSession();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     
     try {
@@ -134,7 +134,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       console.log("Connexion réussie:", data);
       toast.success(`Bienvenue !`);
-      return data;
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
       toast.error(error.message || "Erreur lors de la connexion");
@@ -144,7 +143,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string, workspaceName?: string) => {
+  const register = async (name: string, email: string, password: string, workspaceName?: string): Promise<void> => {
     setIsLoading(true);
     
     try {
@@ -156,7 +155,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         options: {
           data: {
             name,
-            role: "manager", // New users are managers of their workspace
+            role: "manager" as UserRole, // New users are managers of their workspace
             workspaceId: workspaceName || "Mon espace"
           }
         }
@@ -166,7 +165,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       console.log("Inscription réussie:", data);
       toast.success("Compte créé avec succès! Veuillez vérifier votre email pour confirmer votre compte.");
-      return data;
     } catch (error: any) {
       console.error('Erreur lors de l\'inscription:', error);
       toast.error(error.message || "Erreur lors de la création du compte");
