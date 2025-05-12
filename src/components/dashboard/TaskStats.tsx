@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useTask, TaskStatus } from "@/contexts/TaskContext";
+import { useTask } from "@/contexts/TaskContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckIcon, ClockIcon, ListIcon } from "lucide-react";

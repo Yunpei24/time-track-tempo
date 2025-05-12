@@ -44,11 +44,11 @@ const Dashboard: React.FC = () => {
         
         <div className="page-content">
           <div className="max-w-7xl mx-auto">
-            <TaskStats />
+            <TaskStats userId={user.id} />
             
             <div className="mt-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Tâches récentes</h2>
-              <TaskList limit={5} onEditTask={handleEditTask} />
+              <TaskList onEditTask={handleEditTask} />
             </div>
           </div>
         </div>

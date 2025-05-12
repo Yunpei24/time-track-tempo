@@ -105,27 +105,29 @@
   }
 }
 
-/* Layout amélioré pour la structure principale de l'application */
-.app-layout {
-  @apply flex min-h-screen w-full;
-}
+@layer components {
+  /* Layout amélioré pour la structure principale de l'application */
+  .app-layout {
+    @apply flex min-h-screen w-full;
+  }
 
-/* Styles améliorés pour la barre latérale */
-.sidebar {
-  @apply bg-sidebar-background border-r border-sidebar-border;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-}
+  /* Styles améliorés pour la barre latérale */
+  .sidebar {
+    @apply bg-white dark:bg-[hsl(var(--sidebar-background))] border-r border-[hsl(var(--sidebar-border))];
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  }
 
-/* Conteneur principal du contenu avec marge pour la barre latérale */
-.main-content {
-  @apply flex-1 overflow-hidden ml-0 sm:ml-64;
-  min-height: 100vh;
-}
+  /* Conteneur principal du contenu avec marge pour la barre latérale */
+  .main-content {
+    @apply flex-1 overflow-hidden ml-0 sm:ml-64;
+    min-height: 100vh;
+  }
 
-/* Contenu de page avec padding approprié */
-.page-content {
-  @apply p-4 sm:p-6 overflow-y-auto;
-  min-height: calc(100vh - 64px); /* hauteur moins le header */
+  /* Contenu de page avec padding approprié */
+  .page-content {
+    @apply p-4 sm:p-6 overflow-y-auto;
+    min-height: calc(100vh - 64px); /* hauteur moins le header */
+  }
 }
 
 /* Enhanced animations and styles */
