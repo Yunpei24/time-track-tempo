@@ -38,42 +38,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(true);
       
       try {
-        // Établir d'abord le listener d'authentification
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          async (event, currentSession) => {
-            console.log("Auth state changed:", event, currentSession?.user?.id);
-            setSession(currentSession);
-            
-            if (currentSession?.user) {
-              // Récupérer le profil utilisateur
-              const { data: profile, error: profileError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', currentSession.user.id)
-                .single();
-              
-              if (profileError) {
-                console.error("Erreur lors de la récupération du profil:", profileError);
-                setUser(null);
-              } else if (profile) {
-                setUser({
-                  id: profile.id,
-                  name: profile.name,
-                  email: profile.email,
-                  role: profile.role as UserRole,
-                  workspaceName: profile.workspaceid
-                });
-              }
-            } else {
-              setUser(null);
-            }
-          }
-        );
+        console.log("Vérification de la session...");
         
-        // Ensuite vérifier la session existante
-        const { data: { session: existingSession }, error } = await supabase.auth.getSession();
+        // Get existing session first
+        const { data: { session: existingSession }, error: sessionError } = await supabase.auth.getSession();
         
-        if (error) throw error;
+        if (sessionError) {
+          console.error("Erreur lors de la récupération de la session:", sessionError);
+          setIsLoading(false);
+          return;
+        }
         
         if (existingSession) {
           console.log("Session existante trouvée:", existingSession.user?.id);
@@ -89,6 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (profileError) {
             console.error("Erreur lors de la récupération du profil:", profileError);
           } else if (profile) {
+            console.log("Profil récupéré:", profile);
             setUser({
               id: profile.id,
               name: profile.name,
@@ -98,6 +73,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
           }
         }
+        
+        // Set up auth state change listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, currentSession) => {
+            console.log("Changement d'état d'authentification:", event, currentSession?.user?.id);
+            setSession(currentSession);
+            
+            if (currentSession?.user) {
+              // Récupérer le profil utilisateur
+              const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', currentSession.user.id)
+                .single();
+              
+              if (profileError) {
+                console.error("Erreur lors de la récupération du profil:", profileError);
+                setUser(null);
+              } else if (profile) {
+                console.log("Profil mis à jour:", profile);
+                setUser({
+                  id: profile.id,
+                  name: profile.name,
+                  email: profile.email,
+                  role: profile.role as UserRole,
+                  workspaceName: profile.workspaceid
+                });
+              }
+            } else {
+              setUser(null);
+            }
+          }
+        );
+        
+        return () => {
+          subscription.unsubscribe();
+        };
       } catch (error) {
         console.error('Erreur lors de la vérification de la session:', error);
       } finally {
@@ -121,8 +133,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       
       console.log("Connexion réussie:", data);
-      // Les données utilisateur sont récupérées dans le listener onAuthStateChange
       toast.success(`Bienvenue !`);
+      return data;
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
       toast.error(error.message || "Erreur lors de la connexion");
@@ -154,6 +166,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       console.log("Inscription réussie:", data);
       toast.success("Compte créé avec succès! Veuillez vérifier votre email pour confirmer votre compte.");
+      return data;
     } catch (error: any) {
       console.error('Erreur lors de l\'inscription:', error);
       toast.error(error.message || "Erreur lors de la création du compte");

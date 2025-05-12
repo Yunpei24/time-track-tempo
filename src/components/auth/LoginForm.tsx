@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/components/ui/sonner";
+import { LogIn } from "lucide-react";
 
 interface LoginFormProps {
   onShowRegister: () => void;
@@ -30,12 +31,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
     }
 
     try {
+      console.log("Tentative de connexion avec:", email);
       await login(email, password);
-      toast.success("Connexion réussie");
     } catch (err: any) {
       console.error("Erreur de connexion:", err);
       setError(err instanceof Error ? err.message : "Une erreur est survenue lors de la connexion");
-      toast.error("Échec de la connexion");
     }
   };
 
@@ -92,13 +92,24 @@ const LoginForm: React.FC<LoginFormProps> = ({
           className="w-full"
           disabled={isLoading}
         >
-          {isLoading ? "Connexion..." : "Se connecter"}
+          {isLoading ? (
+            <span className="flex items-center gap-2">
+              <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+              Connexion...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <LogIn className="h-4 w-4" />
+              Se connecter
+            </span>
+          )}
         </Button>
       </form>
 
       <div className="text-center">
         <span className="text-gray-500">Pas encore de compte? </span>
         <button
+          type="button"
           onClick={onShowRegister}
           className="text-blue-600 hover:underline"
         >
