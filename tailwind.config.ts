@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,12 @@ export default {
 			}
 		},
 		extend: {
+			screens: {
+				'xs': '480px',
+			},
+			fontSize: {
+				'2xs': '0.65rem',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
