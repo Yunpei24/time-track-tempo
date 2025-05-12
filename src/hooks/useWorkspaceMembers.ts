@@ -57,11 +57,11 @@ export const useWorkspaceMembers = () => {
       
       const newMember = {
         workspace_id: user.workspaceName,
-        user_id: member.id, // ID de l'utilisateur existant à ajouter
         name: member.name,
         email: member.email,
         role: member.role,
-        avatar_url: member.avatarUrl
+        avatar_url: member.avatarUrl,
+        user_id: user.id // Utiliser l'ID de l'utilisateur actuel comme référence temporaire
       };
       
       const { data, error } = await supabase
@@ -76,7 +76,7 @@ export const useWorkspaceMembers = () => {
           id: data[0].id,
           name: data[0].name,
           email: data[0].email,
-          role: data[0].role,
+          role: data[0].role as "member" | "manager",
           joinedAt: data[0].joined_at,
           avatarUrl: data[0].avatar_url
         };

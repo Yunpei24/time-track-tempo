@@ -48,9 +48,7 @@ const AddMemberDialog: React.FC<AddMemberDialogProps> = ({ onAddMember }) => {
     setIsSubmitting(true);
 
     try {
-      // Generate a temporary ID for the member (will be replaced by the server)
       await onAddMember({
-        id: "temp-id",
         name: formData.name,
         email: formData.email,
         role: formData.role,
