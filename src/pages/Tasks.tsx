@@ -1,20 +1,20 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "@/components/layout/Header";
+import { useAuth } from "@/contexts/AuthContext";
 import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
 import TaskList from "@/components/tasks/TaskList";
 import TaskForm from "@/components/tasks/TaskForm";
-import TaskTimer from "@/components/tasks/TaskTimer";
-import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 import { Task } from "@/contexts/TaskContext";
-import { Card, CardContent } from "@/components/ui/card";
 
 const Tasks: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [taskToEdit, setTaskToEdit] = useState<Task | undefined>(undefined);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
   if (!user) {
     navigate("/");
@@ -22,44 +22,40 @@ const Tasks: React.FC = () => {
   }
 
   const openNewTaskModal = () => {
-    setTaskToEdit(undefined);
-    setIsTaskModalOpen(true);
-  };
-
-  const openEditTaskModal = (task: Task) => {
-    setTaskToEdit(task);
+    setTaskToEdit(null);
     setIsTaskModalOpen(true);
   };
 
   const closeTaskModal = () => {
     setIsTaskModalOpen(false);
-    setTaskToEdit(undefined);
+    setTaskToEdit(null);
+  };
+
+  const handleEditTask = (task: Task) => {
+    setTaskToEdit(task);
+    setIsTaskModalOpen(true);
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="app-layout">
       <Sidebar onNewTask={openNewTaskModal} />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="main-content">
         <Header title="Tâches" />
         
-        <main className="flex-1 overflow-y-auto p-6">
+        <div className="page-content">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <Card className="overflow-hidden">
-                  <CardContent className="p-6">
-                    <TaskList onEditTask={openEditTaskModal} />
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="space-y-6">
-                <TaskTimer />
-              </div>
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-800">Toutes les tâches</h1>
+              <Button onClick={openNewTaskModal}>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Nouvelle tâche
+              </Button>
             </div>
+            
+            <TaskList onEditTask={handleEditTask} />
           </div>
-        </main>
+        </div>
       </div>
       
       <TaskForm

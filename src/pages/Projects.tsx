@@ -51,13 +51,13 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 flex-col sm:flex-row">
+    <div className="app-layout">
       <Sidebar onNewTask={openNewTaskModal} />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="main-content">
         <Header title="Projets" />
         
-        <main className="flex-1 overflow-y-auto p-3 sm:p-6">
+        <div className="page-content">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
@@ -73,7 +73,7 @@ const Projects: React.FC = () => {
             
             <ProjectList onEditProject={openEditProjectModal} />
           </div>
-        </main>
+        </div>
       </div>
       
       <ProjectForm
