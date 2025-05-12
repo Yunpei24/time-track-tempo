@@ -34,7 +34,7 @@ export const useProjects = () => {
           startDate: project.startdate,
           endDate: project.enddate,
           createdBy: project.createdby,
-          members: project.members || []
+          members: [] // Ensure members is always an empty array
         }));
         
         setProjects(transformedProjects);
@@ -53,7 +53,7 @@ export const useProjects = () => {
     try {
       setIsLoading(true);
       
-      // Transform project to match Supabase schema
+      // Transform project to match Supabase schema with empty members
       const supabaseProject = {
         name: project.name,
         description: project.description,
@@ -61,7 +61,7 @@ export const useProjects = () => {
         startdate: project.startDate,
         enddate: project.endDate,
         createdby: project.createdBy,
-        members: project.members
+        members: [] // Always set members as empty array
       };
       
       const { data, error } = await supabase
@@ -81,7 +81,7 @@ export const useProjects = () => {
           startDate: data[0].startdate,
           endDate: data[0].enddate,
           createdBy: data[0].createdby,
-          members: data[0].members || []
+          members: [] // Ensure members is always empty
         };
         
         setProjects(prev => [...prev, newProject]);
@@ -106,7 +106,9 @@ export const useProjects = () => {
       if ('color' in updatedFields) supabaseFields.color = updatedFields.color;
       if ('startDate' in updatedFields) supabaseFields.startdate = updatedFields.startDate;
       if ('endDate' in updatedFields) supabaseFields.enddate = updatedFields.endDate;
-      if ('members' in updatedFields) supabaseFields.members = updatedFields.members;
+      
+      // Ensure members is always empty
+      supabaseFields.members = [];
       
       const { error } = await supabase
         .from('projects')
@@ -115,9 +117,13 @@ export const useProjects = () => {
         
       if (error) throw error;
       
-      // Update local state
+      // Update local state - making sure members is empty
       setProjects(prev => prev.map(project => 
-        project.id === id ? { ...project, ...updatedFields } : project
+        project.id === id ? { 
+          ...project, 
+          ...updatedFields,
+          members: [] // Always ensure members is empty
+        } : project
       ));
       toast.success("Projet mis à jour");
     } catch (error) {

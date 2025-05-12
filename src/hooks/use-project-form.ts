@@ -21,7 +21,7 @@ export const useProjectForm = (project?: Project) => {
     color: "#3b82f6",
     startDate: "",
     endDate: "",
-    members: [] as string[]
+    members: [] // Initialize members as empty array
   });
 
   const isEdit = !!project;
@@ -34,7 +34,7 @@ export const useProjectForm = (project?: Project) => {
         color: project.color,
         startDate: project.startDate,
         endDate: project.endDate,
-        members: project.members
+        members: [] // Always set members as empty array
       });
     } else {
       // Reset form for new project
@@ -48,7 +48,7 @@ export const useProjectForm = (project?: Project) => {
         color: "#3b82f6",
         startDate: today.toISOString().split("T")[0],
         endDate: nextMonth.toISOString().split("T")[0],
-        members: user ? [user.id] : []
+        members: [] // Always set members as empty array
       });
     }
   }, [project, user]);
@@ -70,12 +70,15 @@ export const useProjectForm = (project?: Project) => {
     if (!user) return;
 
     if (isEdit && project) {
-      updateProject(project.id, formData);
+      updateProject(project.id, {
+        ...formData,
+        members: [] // Ensure members is empty when updating
+      });
     } else {
       addProject({
         ...formData,
         createdBy: user.id,
-        members: [user.id]
+        members: [] // Ensure members is empty when creating
       });
     }
 
