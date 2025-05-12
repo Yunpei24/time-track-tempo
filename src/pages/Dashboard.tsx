@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "@/components/ui/select";
 import { useTask } from "@/contexts/TaskContext";
 import { useTimer } from "@/contexts/TimerContext";
+import ProjectTimeDistribution from "@/components/dashboard/ProjectTimeDistribution";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -104,7 +105,7 @@ const Dashboard: React.FC = () => {
                     <CardTitle>Répartition du temps par projet</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {/* Project time distribution will be handled by TaskStats component */}
+                    <ProjectTimeDistribution userId={user.id} />
                   </CardContent>
                 </Card>
 
@@ -163,10 +164,9 @@ const Dashboard: React.FC = () => {
                     
                     <Select 
                       value={selectedTaskId} 
-                      onValueChange={setSelectedTaskId} 
-                      className="mb-4 w-full"
+                      onValueChange={setSelectedTaskId}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="mb-4 w-full">
                         <SelectValue placeholder="Sélectionner une tâche" />
                       </SelectTrigger>
                       <SelectContent>
