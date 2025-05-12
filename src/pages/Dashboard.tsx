@@ -54,40 +54,40 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="app-layout">
+    <div className="flex h-screen w-full overflow-hidden">
       <Sidebar onNewTask={openNewTaskModal} />
 
-      <div className="main-content">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <Header title="Tableau de bord" />
         
-        <div className="page-content">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             <TaskStats userId={user.id} />
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mt-4 sm:mt-6">
               {/* Tâches récentes - 2/3 width */}
               <div className="md:col-span-2">
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h2 className="text-xl font-bold text-gray-800 mb-4">Tâches récentes</h2>
+                <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-sm">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Tâches récentes</h2>
                   <TaskList onEditTask={handleEditTask} />
                 </div>
               </div>
               
               {/* Sidebar section - 1/3 width */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Chronomètre */}
                 <TaskTimer />
                 
                 {/* Astuce du jour */}
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center">
-                      <LightbulbIcon className="h-5 w-5 mr-2 text-yellow-400" />
+                    <CardTitle className="flex items-center text-base sm:text-lg">
+                      <LightbulbIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-yellow-400" />
                       Astuce du jour
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600">{getTipOfTheDay()}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">{getTipOfTheDay()}</p>
                   </CardContent>
                 </Card>
               </div>

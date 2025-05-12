@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface HeaderProps {
   title: string;
@@ -20,6 +21,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const isMobile = useIsMobile();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,26 +30,28 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 flex items-center justify-between p-4">
+    <header className="sticky top-0 z-10 bg-white border-b border-gray-200 flex items-center justify-between p-3 sm:p-4 w-full">
       <div className="flex items-center">
-        <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
+        <h1 className="text-lg sm:text-xl font-semibold text-gray-800">{title}</h1>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <form onSubmit={handleSearch} className="relative">
-          <Input
-            type="text"
-            placeholder="Rechercher..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-4 py-2 w-64"
-          />
-          <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-        </form>
+      <div className="flex items-center gap-2 sm:gap-4">
+        {!isMobile && (
+          <form onSubmit={handleSearch} className="relative hidden sm:block">
+            <Input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 w-48 lg:w-64"
+            />
+            <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+          </form>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
               <BellIcon className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>

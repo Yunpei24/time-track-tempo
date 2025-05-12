@@ -51,16 +51,16 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="app-layout">
+    <div className="flex h-screen w-full overflow-hidden">
       <Sidebar onNewTask={openNewTaskModal} />
       
-      <div className="main-content">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <Header title="Projets" />
         
-        <div className="page-content">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-800">
                 Tous les projets
               </h1>
               {isManager && (
