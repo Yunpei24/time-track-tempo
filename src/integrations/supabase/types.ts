@@ -140,6 +140,39 @@ export type Database = {
           },
         ]
       }
+      workspace_members: {
+        Row: {
+          avatar_url: string | null
+          email: string
+          id: string
+          joined_at: string
+          name: string
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          email: string
+          id?: string
+          joined_at?: string
+          name: string
+          role?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          email?: string
+          id?: string
+          joined_at?: string
+          name?: string
+          role?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

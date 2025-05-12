@@ -4,20 +4,26 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { UserCircle } from "lucide-react";
+import { useWorkspaceMembers } from "@/hooks/useWorkspaceMembers";
+import MembersList from "@/components/members/MembersList";
+import AddMemberDialog from "@/components/members/AddMemberDialog";
+import EmptyMembers from "@/components/members/EmptyMembers";
+import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Users } from "lucide-react";
 
 const Members: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { 
+    members, 
+    isLoading, 
+    isManager, 
+    addMember, 
+    updateMemberRole, 
+    removeMember 
+  } = useWorkspaceMembers();
   
   if (!user) {
     navigate("/");
@@ -42,20 +48,31 @@ const Members: React.FC = () => {
                   Gérez les membres de votre espace de travail {user.workspaceName || ""}
                 </p>
               </div>
+              
+              {isManager && (
+                <div className="flex">
+                  <AddMemberDialog onAddMember={addMember} />
+                </div>
+              )}
             </div>
             
             <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Fonctionnalité indisponible</CardTitle>
-                <CardDescription>
-                  La gestion des membres n'est pas disponible pour l'instant
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center py-10">
-                <UserCircle className="h-16 w-16 text-gray-400 mb-4" />
-                <p className="text-center text-gray-500">
-                  Cette fonctionnalité sera disponible ultérieurement.
-                </p>
+              <CardContent className="p-0">
+                {isLoading ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-pulse text-gray-500">Chargement des membres...</div>
+                  </div>
+                ) : members.length === 0 ? (
+                  <EmptyMembers />
+                ) : (
+                  <MembersList 
+                    members={members}
+                    currentUserId={user.id}
+                    isManager={isManager}
+                    onUpdateRole={updateMemberRole}
+                    onRemoveMember={removeMember}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>
