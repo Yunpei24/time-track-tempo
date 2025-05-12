@@ -113,7 +113,7 @@
 
   /* Styles améliorés pour la barre latérale */
   .sidebar {
-    @apply bg-white dark:bg-[hsl(var(--sidebar-background))] border-r border-[hsl(var(--sidebar-border))];
+    @apply bg-white border-r border-gray-200;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   }
 

@@ -1,6 +1,6 @@
+
 import { useState, useEffect } from "react";
 import { Task } from "@/types/taskTypes";
-import { mockTasks } from "@/data/mockData";
 import { toast } from "@/components/ui/sonner";
 
 export const useTasks = () => {
